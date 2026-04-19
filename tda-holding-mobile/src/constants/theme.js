@@ -1,0 +1,111 @@
+export const COLORS = {
+  // TDA Holding brand colors — maquette 2026
+  green: {
+    50:  '#E6EFE9',
+    100: '#C2D6C8',
+    200: '#9ABBA3',
+    300: '#709F7D',
+    400: '#4E8860',
+    500: '#2C7144',
+    600: '#1E5C33',
+    700: '#1A4A2A',
+    800: '#153D22',
+    900: '#0F2E18',
+    950: '#0A1F10',
+  },
+  gold: {
+    50:  '#FDF8EE',
+    100: '#F9EDD2',
+    200: '#F3D99E',
+    300: '#ECC56A',
+    400: '#E6B347',
+    500: '#D4A030',
+    600: '#B8871F',
+    700: '#9A6E14',
+    800: '#7D580D',
+    900: '#5F4208',
+  },
+  cream: {
+    50:  '#FDFCF9',
+    100: '#FAF7F0',
+    200: '#F5F0E8',
+    300: '#EDE5D5',
+    400: '#E0D5C0',
+    500: '#CEC0A5',
+  },
+  silver: {
+    50:  '#FAFAFA',
+    100: '#F5F5F5',
+    200: '#EEEEEE',
+    300: '#E0E0E0',
+    400: '#BDBDBD',
+    500: '#9E9E9E',
+    600: '#757575',
+    700: '#616161',
+    800: '#424242',
+    900: '#212121',
+  },
+  white:   '#FFFFFF',
+  black:   '#000000',
+  danger:  '#DC2626',
+  success: '#16A34A',
+  warning: '#F59E0B',
+  info:    '#3B82F6',
+
+  // Semantic shortcuts
+  primary:     '#1A4A2A',
+  primaryDark: '#0F2E18',
+  accent:      '#D4A030',
+  accentLight: '#F3D99E',
+  background:  '#F5F0E8',
+  surface:     '#FFFFFF',
+  textPrimary: '#1A1A1A',
+  textSecondary: '#6B6B6B',
+  border:      '#E8E0D0',
+};
+
+export const FONTS = {
+  regular: { fontSize: 14, color: COLORS.silver[800] },
+  medium: { fontSize: 14, fontWeight: '500', color: COLORS.silver[800] },
+  bold: { fontSize: 14, fontWeight: '700', color: COLORS.silver[900] },
+  h1: { fontSize: 28, fontWeight: '700', color: COLORS.green[700] },
+  h2: { fontSize: 22, fontWeight: '700', color: COLORS.green[700] },
+  h3: { fontSize: 18, fontWeight: '600', color: COLORS.silver[900] },
+  small: { fontSize: 12, color: COLORS.silver[500] },
+};
+
+export const SIZES = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 48,
+  radius: 12,
+  radiusSm: 8,
+  radiusLg: 16,
+};
+
+export const SHADOWS = {
+  sm: {
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  md: {
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  lg: {
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+};

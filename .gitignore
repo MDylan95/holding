@@ -1,0 +1,14 @@
+# Monorepo holding — whitelist racine.
+# Tout le contenu de d:\Mes_Projets\ est ignoré par défaut, sauf les entrées
+# explicitement réactivées ci-dessous.
+
+# 1. Tout ignorer
+/*
+
+# 2. Whitelist des projets TDA Holding
+!/tda-holding-api/
+!/tda-holding-mobile/
+
+# 3. Fichiers racine versionnés
+!/.gitignore
+!/README.md

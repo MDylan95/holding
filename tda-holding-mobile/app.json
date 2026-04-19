@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "TDA Holding",
+    "slug": "tda-holding-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo-tda.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/logo-tda.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1B5E20"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tdaholding.mobile"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo-tda.png",
+        "backgroundColor": "#1B5E20"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.tdaholding.mobile"
+    },
+    "web": {
+      "favicon": "./assets/logo-tda.png"
+    }
+  }
+}
