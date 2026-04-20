@@ -24,7 +24,7 @@ class FormRequestsTest extends TestCase
         $category = $this->createVehicleCategory();
         Sanctum::actingAs(User::factory()->create()); // client
 
-        $this->postJson('/api/vehicles', [
+        $this->postJson('/api/v1/vehicles', [
             'category_id' => $category->id,
             'brand' => 'Toyota',
             'model' => 'Camry',
@@ -36,7 +36,7 @@ class FormRequestsTest extends TestCase
     {
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->postJson('/api/vehicles', [])
+        $this->postJson('/api/v1/vehicles', [])
             ->assertStatus(422)
             ->assertJsonValidationErrors(['category_id', 'brand', 'model']);
     }
@@ -46,7 +46,7 @@ class FormRequestsTest extends TestCase
         $category = $this->createVehicleCategory();
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->postJson('/api/properties', [
+        $this->postJson('/api/v1/properties', [
             'category_id' => $category->id,
             'title' => 'Test',
             'property_type' => 'castle', // invalide
@@ -65,7 +65,7 @@ class FormRequestsTest extends TestCase
 
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->postJson('/api/drivers', [
+        $this->postJson('/api/v1/drivers', [
             'first_name' => 'C', 'last_name' => 'D',
             'phone' => '+2250101010101',
             'license_number' => 'LIC-B',
@@ -78,7 +78,7 @@ class FormRequestsTest extends TestCase
         $vehicle = $this->createTestVehicle();
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->putJson("/api/vehicles/{$vehicle->id}", [
+        $this->putJson("/api/v1/vehicles/{$vehicle->id}", [
             'daily_rate' => 99999,
         ])->assertStatus(200);
 

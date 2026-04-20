@@ -15,11 +15,12 @@ return [
     |
     */
 
+    // BE-2 : domaines SPA stateful — Next.js prod + dev local.
+    // Surcharger via SANCTUM_STATEFUL_DOMAINS en production.
     'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-        Sanctum::currentApplicationUrlWithPort(),
-        // Sanctum::currentRequestHost(),
+        '%s,%s',
+        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1,tdaholding.com',
+        Sanctum::currentApplicationUrlWithPort()
     ))),
 
     /*

@@ -14,7 +14,7 @@ class RegisterTest extends TestCase
 
     public function test_register_rejects_short_password(): void
     {
-        $this->postJson('/api/auth/register', [
+        $this->postJson('/api/v1/auth/register', [
             'first_name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
@@ -26,7 +26,7 @@ class RegisterTest extends TestCase
 
     public function test_register_accepts_8_char_password(): void
     {
-        $this->postJson('/api/auth/register', [
+        $this->postJson('/api/v1/auth/register', [
             'first_name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',

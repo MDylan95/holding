@@ -41,7 +41,7 @@ class PropertyMaintenanceStatusTest extends TestCase
 
         Sanctum::actingAs($admin);
 
-        $this->putJson("/api/properties/{$property->id}", [
+        $this->putJson("/api/v1/properties/{$property->id}", [
             'status' => 'maintenance',
         ])->assertStatus(200);
 
@@ -65,7 +65,7 @@ class PropertyMaintenanceStatusTest extends TestCase
 
         Sanctum::actingAs($admin);
 
-        $this->putJson("/api/properties/{$property->id}", [
+        $this->putJson("/api/v1/properties/{$property->id}", [
             'status' => 'bogus',
         ])->assertStatus(422)->assertJsonValidationErrors(['status']);
     }

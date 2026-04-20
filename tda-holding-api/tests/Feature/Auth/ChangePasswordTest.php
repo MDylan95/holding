@@ -19,7 +19,7 @@ class ChangePasswordTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $this->putJson('/api/auth/password', [
+        $this->putJson('/api/v1/auth/password', [
             'current_password' => 'password',
             'password' => 'abc123',
             'password_confirmation' => 'abc123',
@@ -32,7 +32,7 @@ class ChangePasswordTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $this->putJson('/api/auth/password', [
+        $this->putJson('/api/v1/auth/password', [
             'current_password' => 'password',
             'password' => 'Abcdef12',
             'password_confirmation' => 'Abcdef12',

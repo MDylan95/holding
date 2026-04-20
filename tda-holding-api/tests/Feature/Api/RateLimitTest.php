@@ -31,11 +31,11 @@ class RateLimitTest extends TestCase
 
         // 10 premières requêtes : ≤ 429 acceptable (201 ou 422, pas 429).
         for ($i = 0; $i < 10; $i++) {
-            $response = $this->postJson('/api/bookings', $payload);
+            $response = $this->postJson('/api/v1/bookings', $payload);
             $this->assertNotSame(429, $response->status(), "Requête {$i} a reçu 429 prématurément.");
         }
 
         // 11e requête : 429 attendu.
-        $this->postJson('/api/bookings', $payload)->assertStatus(429);
+        $this->postJson('/api/v1/bookings', $payload)->assertStatus(429);
     }
 }

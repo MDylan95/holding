@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Property extends Model
 {
@@ -14,6 +15,7 @@ class Property extends Model
         'owner_id',
         'title',
         'description',
+        'slug',
         'property_type',
         'offer_type',
         'sale_price',
@@ -54,6 +56,16 @@ class Property extends Model
             'is_available' => 'boolean',
             'features' => 'array',
         ];
+    }
+
+    // BE-2 : génération automatique du slug à la création si absent.
+    protected static function booted(): void
+    {
+        static::creating(function (self $property) {
+            if (empty($property->slug)) {
+                $property->slug = Str::slug("{$property->title} " . uniqid());
+            }
+        });
     }
 
     // --- Relations ---

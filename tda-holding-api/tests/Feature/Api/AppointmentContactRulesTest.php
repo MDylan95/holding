@@ -28,7 +28,7 @@ class AppointmentContactRulesTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $this->postJson('/api/appointments', [
+        $this->postJson('/api/v1/appointments', [
             'vehicle_id' => $vehicle->id,
             'appointment_date' => now()->addDays(3)->toDateString(),
             'phone' => '+2250102030405',
@@ -46,7 +46,7 @@ class AppointmentContactRulesTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $this->postJson('/api/appointments', [
+        $this->postJson('/api/v1/appointments', [
             'vehicle_id' => $vehicle->id,
             'appointment_date' => now()->addDays(3)->toDateString(),
             'email' => 'client@example.com',
@@ -63,7 +63,7 @@ class AppointmentContactRulesTest extends TestCase
         $vehicle = $this->createVehicle();
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/appointments', [
+        $this->postJson('/api/v1/appointments', [
             'vehicle_id' => $vehicle->id,
             'appointment_date' => now()->addDays(3)->toDateString(),
         ])->assertStatus(422)

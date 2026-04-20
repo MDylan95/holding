@@ -23,7 +23,7 @@ class RoleSeparationTest extends TestCase
         $vehicle = $this->createTestVehicle();
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->deleteJson("/api/vehicles/{$vehicle->id}")
+        $this->deleteJson("/api/v1/vehicles/{$vehicle->id}")
             ->assertStatus(403);
     }
 
@@ -32,7 +32,7 @@ class RoleSeparationTest extends TestCase
         $vehicle = $this->createTestVehicle();
         Sanctum::actingAs(User::factory()->admin()->create());
 
-        $this->deleteJson("/api/vehicles/{$vehicle->id}")
+        $this->deleteJson("/api/v1/vehicles/{$vehicle->id}")
             ->assertStatus(200);
     }
 
@@ -51,7 +51,7 @@ class RoleSeparationTest extends TestCase
 
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->deleteJson("/api/properties/{$property->id}")
+        $this->deleteJson("/api/v1/properties/{$property->id}")
             ->assertStatus(403);
     }
 
@@ -59,7 +59,7 @@ class RoleSeparationTest extends TestCase
     {
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->postJson('/api/categories', [
+        $this->postJson('/api/v1/categories', [
             'name' => 'Test',
             'type' => 'vehicle',
         ])->assertStatus(403);
@@ -69,7 +69,7 @@ class RoleSeparationTest extends TestCase
     {
         Sanctum::actingAs(User::factory()->admin()->create());
 
-        $this->postJson('/api/categories', [
+        $this->postJson('/api/v1/categories', [
             'name' => 'Berline',
             'type' => 'vehicle',
         ])->assertStatus(201);
@@ -80,7 +80,7 @@ class RoleSeparationTest extends TestCase
         $category = Category::create(['name' => 'X', 'slug' => 'x', 'type' => 'vehicle']);
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->deleteJson("/api/categories/{$category->id}")
+        $this->deleteJson("/api/v1/categories/{$category->id}")
             ->assertStatus(403);
     }
 
@@ -89,10 +89,10 @@ class RoleSeparationTest extends TestCase
         $vehicle = $this->createTestVehicle();
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/categories', ['name' => 'X', 'type' => 'vehicle'])
+        $this->postJson('/api/v1/categories', ['name' => 'X', 'type' => 'vehicle'])
             ->assertStatus(403);
 
-        $this->deleteJson("/api/vehicles/{$vehicle->id}")
+        $this->deleteJson("/api/v1/vehicles/{$vehicle->id}")
             ->assertStatus(403);
     }
 
@@ -101,7 +101,7 @@ class RoleSeparationTest extends TestCase
         $category = $this->createVehicleCategory();
         Sanctum::actingAs(User::factory()->agent()->create());
 
-        $this->postJson('/api/vehicles', [
+        $this->postJson('/api/v1/vehicles', [
             'category_id' => $category->id,
             'brand' => 'Ford',
             'model' => 'Focus',

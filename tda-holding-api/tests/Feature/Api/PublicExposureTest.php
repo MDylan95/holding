@@ -27,7 +27,7 @@ class PublicExposureTest extends TestCase
 
         $vehicle = $this->createTestVehicle(['owner_id' => $owner->id]);
 
-        $response = $this->getJson("/api/vehicles/{$vehicle->id}")
+        $response = $this->getJson("/api/v1/vehicles/{$vehicle->id}")
             ->assertStatus(200);
 
         $response->assertJsonMissingPath('data.owner');
@@ -55,7 +55,7 @@ class PublicExposureTest extends TestCase
             'status' => 'available',
         ]);
 
-        $response = $this->getJson("/api/properties/{$property->id}")
+        $response = $this->getJson("/api/v1/properties/{$property->id}")
             ->assertStatus(200);
 
         $response->assertJsonMissingPath('data.owner');

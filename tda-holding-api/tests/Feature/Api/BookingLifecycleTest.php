@@ -40,7 +40,7 @@ class BookingLifecycleTest extends TestCase
 
         Sanctum::actingAs($admin);
 
-        $this->postJson("/api/bookings/{$booking->id}/confirm")
+        $this->postJson("/api/v1/bookings/{$booking->id}/confirm")
             ->assertStatus(200)
             ->assertJsonFragment(['message' => 'Réservation confirmée.']);
 
@@ -62,9 +62,9 @@ class BookingLifecycleTest extends TestCase
         $booking = $this->createPendingBooking($vehicle, $client);
 
         Sanctum::actingAs($admin);
-        $this->postJson("/api/bookings/{$booking->id}/confirm")->assertStatus(200);
+        $this->postJson("/api/v1/bookings/{$booking->id}/confirm")->assertStatus(200);
 
-        $this->postJson("/api/bookings/{$booking->id}/cancel", ['reason' => 'test'])
+        $this->postJson("/api/v1/bookings/{$booking->id}/cancel", ['reason' => 'test'])
             ->assertStatus(200);
 
         $vehicle->refresh();
@@ -80,8 +80,8 @@ class BookingLifecycleTest extends TestCase
         $booking = $this->createPendingBooking($vehicle, $client);
 
         Sanctum::actingAs($admin);
-        $this->postJson("/api/bookings/{$booking->id}/confirm")->assertStatus(200);
-        $this->postJson("/api/bookings/{$booking->id}/complete")->assertStatus(200);
+        $this->postJson("/api/v1/bookings/{$booking->id}/confirm")->assertStatus(200);
+        $this->postJson("/api/v1/bookings/{$booking->id}/complete")->assertStatus(200);
 
         $vehicle->refresh();
         $this->assertSame('available', $vehicle->status);
@@ -97,7 +97,7 @@ class BookingLifecycleTest extends TestCase
 
         Sanctum::actingAs($admin);
 
-        $this->postJson("/api/bookings/{$booking->id}/reject", ['reason' => 'KO'])
+        $this->postJson("/api/v1/bookings/{$booking->id}/reject", ['reason' => 'KO'])
             ->assertStatus(200);
 
         $booking->refresh();
@@ -113,7 +113,7 @@ class BookingLifecycleTest extends TestCase
 
         Sanctum::actingAs($client);
 
-        $this->postJson("/api/bookings/{$booking->id}/cancel")
+        $this->postJson("/api/v1/bookings/{$booking->id}/cancel")
             ->assertStatus(200);
 
         $this->assertSame('cancelled', $booking->fresh()->status);
@@ -129,7 +129,7 @@ class BookingLifecycleTest extends TestCase
 
         Sanctum::actingAs($admin);
 
-        $this->postJson("/api/bookings/{$booking->id}/confirm")
+        $this->postJson("/api/v1/bookings/{$booking->id}/confirm")
             ->assertStatus(422)
             ->assertJsonFragment(['message' => 'Cette réservation ne peut pas être confirmée.']);
     }

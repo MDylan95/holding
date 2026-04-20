@@ -27,7 +27,7 @@ class RegisterRouteRemovedTest extends TestCase
 
     public function test_api_register_route_still_works(): void
     {
-        $response = $this->postJson('/api/auth/register', [
+        $response = $this->postJson('/api/v1/auth/register', [
             'first_name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',

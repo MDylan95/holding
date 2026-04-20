@@ -32,7 +32,7 @@ class MorphMapTest extends TestCase
         $client = User::factory()->create();
         Sanctum::actingAs($client);
 
-        $this->postJson('/api/bookings', [
+        $this->postJson('/api/v1/bookings', [
             'bookable_type' => 'vehicle',
             'bookable_id' => $vehicle->id,
             'start_date' => now()->addDay()->toDateString(),
@@ -48,7 +48,7 @@ class MorphMapTest extends TestCase
         $vehicle = $this->createTestVehicle();
         Sanctum::actingAs(User::factory()->create());
 
-        $this->postJson('/api/favorites/toggle', [
+        $this->postJson('/api/v1/favorites/toggle', [
             'favorable_type' => 'vehicle',
             'favorable_id' => $vehicle->id,
         ])->assertStatus(201);

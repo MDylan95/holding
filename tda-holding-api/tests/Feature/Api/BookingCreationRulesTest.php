@@ -29,7 +29,7 @@ class BookingCreationRulesTest extends TestCase
         $client = User::factory()->create();
         Sanctum::actingAs($client);
 
-        $this->postJson('/api/bookings', [
+        $this->postJson('/api/v1/bookings', [
             'bookable_type' => 'vehicle',
             'bookable_id' => $vehicle->id,
             'start_date' => now()->addDay()->toDateString(),
@@ -44,7 +44,7 @@ class BookingCreationRulesTest extends TestCase
         $client = User::factory()->create();
         Sanctum::actingAs($client);
 
-        $this->postJson('/api/bookings', [
+        $this->postJson('/api/v1/bookings', [
             'bookable_type' => 'vehicle',
             'bookable_id' => $vehicle->id,
             'start_date' => now()->addDay()->toDateString(),
@@ -70,7 +70,7 @@ class BookingCreationRulesTest extends TestCase
 
         Sanctum::actingAs($client);
 
-        $this->postJson('/api/bookings', [
+        $this->postJson('/api/v1/bookings', [
             'bookable_type' => 'vehicle',
             'bookable_id' => $vehicle->id,
             'start_date' => now()->addDays(2)->toDateString(),

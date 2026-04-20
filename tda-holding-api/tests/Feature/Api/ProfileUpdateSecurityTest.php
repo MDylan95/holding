@@ -20,7 +20,7 @@ class ProfileUpdateSecurityTest extends TestCase
         $client = User::factory()->create(['role' => 'client']);
         Sanctum::actingAs($client);
 
-        $this->putJson('/api/auth/profile', [
+        $this->putJson('/api/v1/auth/profile', [
             'first_name' => 'Hacker',
             'role' => 'super_admin',
             'is_active' => false,
@@ -40,7 +40,7 @@ class ProfileUpdateSecurityTest extends TestCase
 
         Sanctum::actingAs($client);
 
-        $this->putJson('/api/auth/profile', [
+        $this->putJson('/api/v1/auth/profile', [
             'password' => 'new-password',
         ])->assertStatus(200);
 
@@ -52,7 +52,7 @@ class ProfileUpdateSecurityTest extends TestCase
         $client = User::factory()->create();
         Sanctum::actingAs($client);
 
-        $this->putJson('/api/auth/profile', [
+        $this->putJson('/api/v1/auth/profile', [
             'first_name' => 'Nouveau',
             'last_name' => 'Nom',
             'city' => 'Abidjan',

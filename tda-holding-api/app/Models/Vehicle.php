@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Vehicle extends Model
 {
@@ -27,6 +28,7 @@ class Vehicle extends Model
         'status',
         'is_available',
         'description',
+        'slug',
         'location',
         'city',
         'has_ac',
@@ -46,6 +48,16 @@ class Vehicle extends Model
             'is_available' => 'boolean',
             'features' => 'array',
         ];
+    }
+
+    // BE-2 : génération automatique du slug à la création si absent.
+    protected static function booted(): void
+    {
+        static::creating(function (self $vehicle) {
+            if (empty($vehicle->slug)) {
+                $vehicle->slug = Str::slug("{$vehicle->brand} {$vehicle->model} " . uniqid());
+            }
+        });
     }
 
     // --- Relations ---

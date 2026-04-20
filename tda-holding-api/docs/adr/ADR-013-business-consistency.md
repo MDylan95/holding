@@ -1,4 +1,4 @@
-# ADR-012 — Cohérence métier & dette technique (Epic D + E)
+# ADR-013 — Cohérence métier & dette technique (Epic D + E)
 
 - **Date** : 2026-04-19
 - **Statut** : Accepté

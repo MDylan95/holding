@@ -37,7 +37,7 @@ class AppointmentPolicyTest extends TestCase
 
         Sanctum::actingAs($owner);
 
-        $this->getJson("/api/appointments/{$appointment->id}")
+        $this->getJson("/api/v1/appointments/{$appointment->id}")
             ->assertStatus(200);
     }
 
@@ -49,7 +49,7 @@ class AppointmentPolicyTest extends TestCase
 
         Sanctum::actingAs($admin);
 
-        $this->getJson("/api/appointments/{$appointment->id}")
+        $this->getJson("/api/v1/appointments/{$appointment->id}")
             ->assertStatus(200);
     }
 
@@ -61,7 +61,7 @@ class AppointmentPolicyTest extends TestCase
 
         Sanctum::actingAs($agent);
 
-        $this->getJson("/api/appointments/{$appointment->id}")
+        $this->getJson("/api/v1/appointments/{$appointment->id}")
             ->assertStatus(200);
     }
 
@@ -73,7 +73,7 @@ class AppointmentPolicyTest extends TestCase
 
         Sanctum::actingAs($other);
 
-        $this->getJson("/api/appointments/{$appointment->id}")
+        $this->getJson("/api/v1/appointments/{$appointment->id}")
             ->assertStatus(403);
     }
 }

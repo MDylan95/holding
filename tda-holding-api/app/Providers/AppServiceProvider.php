@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Dedoc\Scramble\Scramble;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
@@ -28,6 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->configureRateLimiting();
         $this->configureMorphMap();
+        $this->configureScramble();
     }
 
     /**
@@ -59,5 +61,22 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api-create', function (Request $request) {
             return Limit::perMinute(10)->by(optional($request->user())->id ?: $request->ip());
         });
+    }
+
+    /**
+     * BE-2 — Scramble : spec OpenAPI exposée à /api/v1/openapi.json
+     * Interface Stoplight Elements à /api/v1/docs (accès local en dev, restreint en prod).
+     */
+    protected function configureScramble(): void
+    {
+        Scramble::configure()
+            ->withDocumentTransformers(function (\Dedoc\Scramble\Support\Generator\OpenApi $openApi) {
+                $openApi->secure(
+                    \Dedoc\Scramble\Support\Generator\SecurityScheme::http('bearer')
+                );
+            });
+
+        Scramble::registerJsonSpecificationRoute('api/v1/openapi.json');
+        Scramble::registerUiRoute('api/v1/docs');
     }
 }
