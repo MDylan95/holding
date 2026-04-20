@@ -29,9 +29,16 @@ class Media extends Model
 
     // --- Accessors ---
 
+    /**
+     * BE-3 : URL du média pointant sur le disk actif.
+     * - dev/test : disk 'public' → /storage/...
+     * - prod     : disk 'r2'     → https://cdn.tdaholding.com/...
+     */
     public function getUrlAttribute(): string
     {
-        return Storage::disk('public')->url($this->file_path);
+        $disk = config('filesystems.default', 'public');
+
+        return Storage::disk($disk)->url($this->file_path);
     }
 
     // --- Relations ---

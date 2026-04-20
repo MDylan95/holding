@@ -8,6 +8,7 @@ use App\Models\Property;
 use App\Models\Vehicle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
@@ -31,9 +32,11 @@ class MediaController extends Controller
 
         $uploaded = [];
 
+        $disk = config('filesystems.default', 'public');
+
         foreach ($request->file('files') as $index => $file) {
             $folder = 'uploads/' . $validated['mediable_type'] . 's/' . $validated['mediable_id'];
-            $path = $file->store($folder, 'public');
+            $path = $file->store($folder, $disk);
 
             $media = Media::create([
                 'mediable_type' => $validated['mediable_type'],
@@ -59,9 +62,10 @@ class MediaController extends Controller
     {
         $this->authorize('delete', $media);
 
-        $path = storage_path('app/public/' . $media->file_path);
-        if (file_exists($path)) {
-            unlink($path);
+        // BE-3 : suppression sur le disk actif (local 'public' ou CDN 'r2').
+        $disk = config('filesystems.default', 'public');
+        if (Storage::disk($disk)->exists($media->file_path)) {
+            Storage::disk($disk)->delete($media->file_path);
         }
 
         $media->delete();
