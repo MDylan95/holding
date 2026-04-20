@@ -1,0 +1,19 @@
+{
+  "name": "tda-holding-web",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm --filter @tda/api-types generate && pnpm --filter web build",
+    "start": "pnpm --filter web start",
+    "lint": "pnpm --filter web lint",
+    "typecheck": "pnpm --filter web typecheck && pnpm --filter @tda/api-types typecheck",
+    "test": "pnpm --filter web test",
+    "generate:types": "pnpm --filter @tda/api-types generate"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "sharp", "unrs-resolver"]
+  }
+}

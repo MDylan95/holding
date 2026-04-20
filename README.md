@@ -4,9 +4,11 @@ Ce dépôt regroupe les deux projets de la plateforme TDA Holding (location/vent
 
 ## Structure
 
-- **`tda-holding-api/`** — Backend Laravel 13 + Inertia/React (admin) + API Sanctum (mobile).
+- **`tda-holding-api/`** — Backend Laravel 13 + Inertia/React (admin) + API Sanctum.
   Stack : PHP 8.3, Laravel 13, Sanctum, Inertia, React, Tailwind, PostgreSQL (prod) / SQLite (tests).
-- **`tda-holding-mobile/`** — App mobile Expo / React Native pour les clients finaux.
+- **`tda-holding-web/`** — Frontend Next.js 15 PWA (site public + PWA installable).
+  Stack : Next.js 15, React 19, TypeScript strict, Tailwind CSS 4, shadcn/ui, TanStack Query, Sanctum SPA, pnpm workspaces.
+- **`tda-holding-mobile/`** — App mobile Expo / React Native (archivée — remplacée par la PWA).
   Stack : Expo, React Native, Axios.
 
 ## Démarrer

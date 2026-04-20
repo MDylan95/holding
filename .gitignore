@@ -8,6 +8,7 @@
 # 2. Whitelist des projets TDA Holding
 !/tda-holding-api/
 !/tda-holding-mobile/
+!/tda-holding-web/
 
 # 3. Fichiers racine versionnés
 !/.gitignore

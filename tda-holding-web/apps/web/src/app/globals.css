@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+:root {
+  --color-tda-green: #1b5e20;
+  --color-tda-gold: #daa520;
+}
