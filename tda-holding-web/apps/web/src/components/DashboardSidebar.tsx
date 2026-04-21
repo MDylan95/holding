@@ -57,13 +57,13 @@ export function DashboardSidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed left-0 top-0 h-screen w-64 bg-[#1B2E1A] text-white pt-20 transition-transform duration-300 z-30 md:translate-x-0 ${
+        className={`fixed left-0 top-0 h-screen w-64 bg-[#1B2E1A] text-white pt-20 transition-transform duration-300 z-30 md:translate-x-0 overflow-y-auto ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="p-6 space-y-8">
+        <div className="p-6 min-h-full flex flex-col">
           {/* User info */}
-          <div className="border-b border-white/20 pb-6">
+          <div className="border-b border-white/20 pb-6 mb-8">
             <div className="w-12 h-12 bg-[#DAA520] rounded-full flex items-center justify-center mb-3">
               <span className="text-white font-black text-lg">
                 {user?.first_name?.[0]}
@@ -74,7 +74,7 @@ export function DashboardSidebar() {
           </div>
 
           {/* Navigation */}
-          <nav className="space-y-2">
+          <nav className="space-y-2 flex-1">
             {links.map(({ href, label, icon: Icon, exact }) => (
               <Link
                 key={href}
@@ -92,27 +92,30 @@ export function DashboardSidebar() {
             ))}
           </nav>
 
-          {/* Back to site */}
-          <Link
-            href="/"
-            onClick={() => setOpen(false)}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#DAA520] hover:bg-[#DAA520]/10 transition"
-          >
-            <Globe size={20} />
-            <span className="text-sm font-medium">Retour au site</span>
-          </Link>
+          {/* Bottom Actions */}
+          <div className="border-t border-white/20 pt-6 space-y-3">
+            {/* Back to site */}
+            <Link
+              href="/"
+              onClick={() => setOpen(false)}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-[#DAA520] hover:bg-[#DAA520]/10 transition"
+            >
+              <Globe size={20} />
+              <span className="text-sm font-medium">Retour au site</span>
+            </Link>
 
-          {/* Logout */}
-          <button
-            onClick={() => {
-              logout();
-              setOpen(false);
-            }}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition"
-          >
-            <LogOut size={20} />
-            <span className="text-sm font-medium">Déconnexion</span>
-          </button>
+            {/* Logout */}
+            <button
+              onClick={() => {
+                logout();
+                setOpen(false);
+              }}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-500/10 transition"
+            >
+              <LogOut size={20} />
+              <span className="text-sm font-medium">Déconnexion</span>
+            </button>
+          </div>
         </div>
       </aside>
 
