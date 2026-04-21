@@ -1,97 +1,32 @@
-import type { Metadata } from "next";
+"use client";
+
 import Link from "next/link";
-import { MapPin, Users, MessageCircle } from "lucide-react";
+import { MapPin, Users, MessageCircle, Loader } from "lucide-react";
+import { useState } from "react";
+import { useVehicles, useProperties } from "@/lib/hooks";
 
-export const metadata: Metadata = {
-  title: "Réservations — Catalogue complet",
-  description:
-    "Parcourez notre catalogue de véhicules et biens immobiliers. Réservez en ligne ou prenez rendez-vous.",
-};
+function ReservationsPageContent() {
+  const { vehicles, loading: vehiclesLoading } = useVehicles();
+  const { properties, loading: propertiesLoading } = useProperties();
+  const [activeTab, setActiveTab] = useState<"vehicles" | "properties">(
+    "vehicles"
+  );
+  const [selectedCity, setSelectedCity] = useState("Tous");
+  const [selectedType, setSelectedType] = useState("Tous types");
 
-const VEHICLES = [
-  {
-    id: "v1",
-    name: "Toyota Land Cruiser",
-    city: "Abidjan",
-    type: "SUV",
-    seats: 7,
-    img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&q=80",
-    tag: "Location",
-    tagColor: "bg-[#1B5E20]",
-    price: "85 000 FCFA",
-    unit: "/ jour",
-    cta: "Réserver",
-  },
-  {
-    id: "v2",
-    name: "Mercedes Classe E",
-    city: "Dakar",
-    type: "Berline",
-    seats: 5,
-    img: "https://images.unsplash.com/photo-1553440569-bcc63803a83d?w=600&q=80",
-    tag: "Location",
-    tagColor: "bg-[#1B5E20]",
-    badge: "Réservé",
-    price: "95 000 FCFA",
-    unit: "/ jour",
-    cta: "Réserver",
-  },
-  {
-    id: "v3",
-    name: "Hyundai Tucson",
-    city: "Lomé",
-    type: "SUV",
-    seats: 5,
-    img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&q=80",
-    tag: "Vente",
-    tagColor: "bg-[#DAA520]",
-    price: "12 500 000 FCFA",
-    unit: null,
-    cta: "Rendez-vous",
-  },
-  {
-    id: "v4",
-    name: "Toyota Hilux",
-    city: "Cotonou",
-    type: "Pick-up",
-    seats: 5,
-    img: "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&q=80",
-    tag: "Location",
-    tagColor: "bg-[#1B5E20]",
-    price: "55 000 FCFA",
-    unit: "/ jour",
-    cta: "Réserver",
-  },
-  {
-    id: "v5",
-    name: "BMW Série 5",
-    city: "Abidjan",
-    type: "Berline",
-    seats: 5,
-    img: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&q=80",
-    tag: "Vente",
-    tagColor: "bg-[#DAA520]",
-    price: "18 000 000 FCFA",
-    unit: null,
-    cta: "Rendez-vous",
-    badge: "Réservé",
-  },
-  {
-    id: "v6",
-    name: "Renault Duster",
-    city: "Ouagadougou",
-    type: "SUV",
-    seats: 5,
-    img: "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&q=80",
-    tag: "Location",
-    tagColor: "bg-[#1B5E20]",
-    price: "40 000 FCFA",
-    unit: "/ jour",
-    cta: "Réserver",
-  },
-];
+  // Extraire les villes uniques
+  const cities = [
+    "Tous",
+    ...new Set(vehicles.map((v) => v.city)),
+  ];
 
-export default function ReservationsPage() {
+  // Filtrer les véhicules
+  const filteredVehicles = vehicles.filter((v) => {
+    const cityMatch = selectedCity === "Tous" || v.city === selectedCity;
+    const typeMatch = selectedType === "Tous types" || v.type === selectedType;
+    return cityMatch && typeMatch;
+  });
+
   return (
     <>
       {/* Hero */}
@@ -113,118 +48,259 @@ export default function ReservationsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-wrap items-center gap-4">
           {/* Tabs */}
           <div className="flex gap-2">
-            <button className="inline-flex items-center gap-1.5 bg-[#1B5E20] text-white rounded-full px-5 py-2 text-sm font-semibold">
+            <button
+              onClick={() => setActiveTab("vehicles")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm font-semibold transition ${
+                activeTab === "vehicles"
+                  ? "bg-[#1B5E20] text-white"
+                  : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+              }`}
+            >
               <span>🚗</span> Véhicules
             </button>
-            <button className="inline-flex items-center gap-1.5 bg-white text-gray-600 border border-gray-200 rounded-full px-5 py-2 text-sm hover:bg-gray-50 transition">
+            <button
+              onClick={() => setActiveTab("properties")}
+              className={`inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm font-semibold transition ${
+                activeTab === "properties"
+                  ? "bg-[#1B5E20] text-white"
+                  : "bg-white text-gray-600 border border-gray-200 hover:bg-gray-50"
+              }`}
+            >
               <span>🏠</span> Immobilier
             </button>
           </div>
 
-          <div className="flex gap-3 ml-auto flex-wrap">
-            <select className="border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-[#1B5E20]">
-              <option>Tous</option>
-              <option>Abidjan</option>
-              <option>Dakar</option>
-              <option>Lomé</option>
-              <option>Cotonou</option>
-            </select>
-            <select className="border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-[#1B5E20]">
-              <option>Toutes</option>
-              <option>Location</option>
-              <option>Vente</option>
-            </select>
-            <select className="border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-[#1B5E20]">
-              <option>Tous types</option>
-              <option>SUV</option>
-              <option>Berline</option>
-              <option>Pick-up</option>
-            </select>
-          </div>
+          {activeTab === "vehicles" && (
+            <div className="flex gap-3 ml-auto flex-wrap">
+              <select
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                className="border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-[#1B5E20]"
+              >
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="border border-gray-200 rounded-full px-4 py-2 text-sm text-gray-600 focus:outline-none focus:border-[#1B5E20]"
+              >
+                <option>Tous types</option>
+                <option>SUV</option>
+                <option>Berline</option>
+                <option>Pick-up</option>
+              </select>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Results */}
       <section className="py-10 bg-gray-50 min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <p className="text-sm text-gray-500 mb-6">
-            <span className="font-semibold text-gray-900">{VEHICLES.length} véhicule(s)</span> trouvé(s)
-          </p>
+          {activeTab === "vehicles" ? (
+            <>
+              {vehiclesLoading ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader className="animate-spin text-[#1B5E20]" size={32} />
+                </div>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-500 mb-6">
+                    <span className="font-semibold text-gray-900">
+                      {filteredVehicles.length} véhicule(s)
+                    </span>{" "}
+                    trouvé(s)
+                  </p>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {VEHICLES.map((v) => (
-              <div
-                key={v.id}
-                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-              >
-                {/* Image */}
-                <div className="relative">
-                  <img
-                    src={v.img}
-                    alt={v.name}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="absolute top-3 left-3 flex gap-2">
-                    {"badge" in v && v.badge && (
-                      <span className="bg-orange-500 text-white text-xs rounded-full px-2.5 py-0.5 font-semibold">
-                        {v.badge as string}
-                      </span>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredVehicles.length > 0 ? (
+                      filteredVehicles.map((v) => (
+                        <div
+                          key={v.id}
+                          className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                        >
+                          {/* Image */}
+                          <div className="relative">
+                            <img
+                              src={
+                                v.media?.[0]?.url ||
+                                v.images?.[0]?.url ||
+                                "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&q=80"
+                              }
+                              alt={v.name}
+                              className="w-full h-48 object-cover"
+                            />
+                            <div className="absolute top-3 left-3 flex gap-2">
+                              <span className="bg-[#1B5E20] text-white text-xs rounded-full px-2.5 py-0.5 font-semibold">
+                                {v.price_per_day ? "Location" : "Vente"}
+                              </span>
+                            </div>
+                          </div>
+
+                          {/* Content */}
+                          <div className="p-5">
+                            <h3 className="font-bold text-gray-900 mb-1">
+                              {v.name}
+                            </h3>
+                            <div className="flex items-center gap-3 text-xs text-gray-500 mb-4">
+                              <span className="flex items-center gap-1">
+                                <MapPin size={11} className="text-[#DAA520]" />
+                                {v.city}
+                              </span>
+                              <span>·</span>
+                              <span>{v.type}</span>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <span className="font-black text-gray-900">
+                                  {v.price_per_day
+                                    ? `${v.price_per_day.toLocaleString()} FCFA`
+                                    : `${v.price_sale?.toLocaleString()} FCFA`}
+                                </span>
+                                {v.price_per_day && (
+                                  <span className="text-gray-400 text-xs">
+                                    {" "}
+                                    / jour
+                                  </span>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <a
+                                  href={`https://wa.me/2250700000000?text=Bonjour, je suis intéressé par ${encodeURIComponent(v.name)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center hover:bg-green-500 transition"
+                                  title="Contacter sur WhatsApp"
+                                >
+                                  <MessageCircle
+                                    size={15}
+                                    className="text-white"
+                                  />
+                                </a>
+                                <Link
+                                  href={`/vehicules/${v.slug}`}
+                                  className="bg-[#1B5E20] text-white text-xs rounded-full px-4 py-1.5 font-semibold hover:bg-[#2E7D32] transition"
+                                >
+                                  Voir
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-span-full text-center py-12">
+                        <p className="text-gray-500">
+                          Aucun véhicule ne correspond à votre recherche
+                        </p>
+                      </div>
                     )}
-                    <span
-                      className={`${v.tagColor} text-white text-xs rounded-full px-2.5 py-0.5 font-semibold`}
-                    >
-                      {v.tag}
-                    </span>
                   </div>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              {propertiesLoading ? (
+                <div className="flex items-center justify-center py-20">
+                  <Loader className="animate-spin text-[#1B5E20]" size={32} />
                 </div>
+              ) : (
+                <>
+                  <p className="text-sm text-gray-500 mb-6">
+                    <span className="font-semibold text-gray-900">
+                      {properties.length} bien(s)
+                    </span>{" "}
+                    trouvé(s)
+                  </p>
 
-                {/* Content */}
-                <div className="p-5">
-                  <h3 className="font-bold text-gray-900 mb-1">{v.name}</h3>
-                  <div className="flex items-center gap-3 text-xs text-gray-500 mb-4">
-                    <span className="flex items-center gap-1">
-                      <MapPin size={11} className="text-[#DAA520]" />
-                      {v.city}
-                    </span>
-                    <span>·</span>
-                    <span>{v.type}</span>
-                    <span>·</span>
-                    <span className="flex items-center gap-1">
-                      <Users size={11} /> {v.seats} places
-                    </span>
-                  </div>
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {properties.length > 0 ? (
+                      properties.map((p) => (
+                        <div
+                          key={p.id}
+                          className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                        >
+                          {/* Image */}
+                          <div className="relative">
+                            <img
+                              src={
+                                p.media?.[0]?.url ||
+                                p.images?.[0]?.url ||
+                                "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=600&q=80"
+                              }
+                              alt={p.name}
+                              className="w-full h-48 object-cover"
+                            />
+                          </div>
 
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="font-black text-gray-900">{v.price}</span>
-                      {v.unit && (
-                        <span className="text-gray-400 text-xs"> {v.unit}</span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <a
-                        href={`https://wa.me/2250700000000?text=Bonjour, je suis intéressé par ${encodeURIComponent(v.name)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center hover:bg-green-500 transition"
-                        title="Contacter sur WhatsApp"
-                      >
-                        <MessageCircle size={15} className="text-white" />
-                      </a>
-                      <Link
-                        href={`/reservations?type=vehicule&id=${v.id}`}
-                        className="bg-[#1B5E20] text-white text-xs rounded-full px-4 py-1.5 font-semibold hover:bg-[#2E7D32] transition"
-                      >
-                        {v.cta}
-                      </Link>
-                    </div>
+                          {/* Content */}
+                          <div className="p-5">
+                            <h3 className="font-bold text-gray-900 mb-1">
+                              {p.name}
+                            </h3>
+                            <div className="flex items-center gap-3 text-xs text-gray-500 mb-4">
+                              <span className="flex items-center gap-1">
+                                <MapPin size={11} className="text-[#DAA520]" />
+                                {p.city}
+                              </span>
+                              <span>·</span>
+                              <span>{p.type}</span>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <span className="font-black text-gray-900">
+                                  {p.price
+                                    ? `${p.price.toLocaleString()} FCFA`
+                                    : "Sur demande"}
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <a
+                                  href={`https://wa.me/2250700000000?text=Bonjour, je suis intéressé par ${encodeURIComponent(p.name)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="w-8 h-8 bg-[#25D366] rounded-full flex items-center justify-center hover:bg-green-500 transition"
+                                  title="Contacter sur WhatsApp"
+                                >
+                                  <MessageCircle
+                                    size={15}
+                                    className="text-white"
+                                  />
+                                </a>
+                                <Link
+                                  href={`/proprietes/${p.slug}`}
+                                  className="bg-[#1B5E20] text-white text-xs rounded-full px-4 py-1.5 font-semibold hover:bg-[#2E7D32] transition"
+                                >
+                                  Voir
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-span-full text-center py-12">
+                        <p className="text-gray-500">
+                          Aucun bien ne correspond à votre recherche
+                        </p>
+                      </div>
+                    )}
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
+                </>
+              )}
+            </>
+          )}
         </div>
       </section>
     </>
   );
 }
+
+export default ReservationsPageContent;
