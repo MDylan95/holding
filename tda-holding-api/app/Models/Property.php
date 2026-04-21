@@ -10,6 +10,8 @@ class Property extends Model
 {
     use SoftDeletes;
 
+    protected $appends = ['name', 'price', 'type'];
+
     protected $fillable = [
         'category_id',
         'owner_id',
@@ -43,11 +45,11 @@ class Property extends Model
     protected function casts(): array
     {
         return [
-            'sale_price' => 'decimal:2',
-            'monthly_rent' => 'decimal:2',
-            'surface_area' => 'decimal:2',
-            'latitude' => 'decimal:7',
-            'longitude' => 'decimal:7',
+            'sale_price' => 'float',
+            'monthly_rent' => 'float',
+            'surface_area' => 'float',
+            'latitude' => 'float',
+            'longitude' => 'float',
             'has_pool' => 'boolean',
             'has_garage' => 'boolean',
             'has_garden' => 'boolean',
@@ -153,5 +155,22 @@ class Property extends Model
     public function markAsMaintenance(): void
     {
         $this->update(['status' => 'maintenance', 'is_available' => false]);
+    }
+
+    // --- Accessors ---
+
+    public function getNameAttribute(): string
+    {
+        return $this->title ?? 'Propriété';
+    }
+
+    public function getPriceAttribute(): ?float
+    {
+        return $this->sale_price ?? $this->monthly_rent;
+    }
+
+    public function getTypeAttribute(): string
+    {
+        return $this->property_type ?? 'Immobilier';
     }
 }

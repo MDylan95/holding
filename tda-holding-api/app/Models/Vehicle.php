@@ -10,6 +10,13 @@ class Vehicle extends Model
 {
     use SoftDeletes;
 
+    protected $appends = ['name', 'price_per_day', 'price_sale', 'type'];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     protected $fillable = [
         'category_id',
         'owner_id',
@@ -40,8 +47,8 @@ class Vehicle extends Model
     protected function casts(): array
     {
         return [
-            'daily_rate' => 'decimal:2',
-            'sale_price' => 'decimal:2',
+            'daily_rate' => 'float',
+            'sale_price' => 'float',
             'has_ac' => 'boolean',
             'has_gps' => 'boolean',
             'is_featured' => 'boolean',
@@ -55,7 +62,7 @@ class Vehicle extends Model
     {
         static::creating(function (self $vehicle) {
             if (empty($vehicle->slug)) {
-                $vehicle->slug = Str::slug("{$vehicle->brand} {$vehicle->model} " . uniqid());
+                $vehicle->slug = Str::slug("{$vehicle->brand} {$vehicle->model}") . '-' . uniqid();
             }
         });
     }
@@ -150,5 +157,27 @@ class Vehicle extends Model
     public function markAsMaintenance(): void
     {
         $this->update(['status' => 'maintenance', 'is_available' => false]);
+    }
+
+    // --- Accessors ---
+
+    public function getNameAttribute(): string
+    {
+        return "{$this->brand} {$this->model}";
+    }
+
+    public function getPricePerDayAttribute(): ?float
+    {
+        return $this->daily_rate;
+    }
+
+    public function getPriceSaleAttribute(): ?float
+    {
+        return $this->sale_price;
+    }
+
+    public function getTypeAttribute(): string
+    {
+        return $this->category?->name ?? 'Véhicule';
     }
 }

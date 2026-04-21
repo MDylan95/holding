@@ -14,7 +14,7 @@ class VehicleController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Vehicle::with(['category', 'primaryImage', 'owner']);
+        $query = Vehicle::withoutTrashed()->with(['category', 'primaryImage', 'owner']);
 
         if ($request->filled('search')) {
             $search = $request->input('search');
@@ -107,8 +107,9 @@ class VehicleController extends Controller
             ->with('success', 'Véhicule ajouté avec succès.');
     }
 
-    public function edit(Vehicle $vehicle)
+    public function edit($id)
     {
+        $vehicle = Vehicle::findOrFail($id);
         $vehicle->load('media');
         $categories = Category::ofType('vehicle')->active()->get();
 
@@ -118,8 +119,10 @@ class VehicleController extends Controller
         ]);
     }
 
-    public function update(Request $request, Vehicle $vehicle)
+    public function update(Request $request, $id)
     {
+        $vehicle = Vehicle::findOrFail($id);
+
         $validated = $request->validate([
             'category_id' => 'sometimes|exists:categories,id',
             'brand' => 'sometimes|string|max:255',
@@ -169,8 +172,10 @@ class VehicleController extends Controller
             ->with('success', 'Véhicule mis à jour.');
     }
 
-    public function destroy(Vehicle $vehicle)
+    public function destroy($id)
     {
+        $vehicle = Vehicle::findOrFail($id);
+
         foreach ($vehicle->media as $media) {
             $path = storage_path('app/public/' . $media->file_path);
             if (file_exists($path)) {

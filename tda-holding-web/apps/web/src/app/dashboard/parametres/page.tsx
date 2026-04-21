@@ -254,26 +254,7 @@ export default function ParametresPage() {
         </div>
       </div>
 
-      {/* Danger Zone */}
-      <div className="bg-red-50 border border-red-200 rounded-2xl p-8">
-        <h2 className="text-2xl font-black text-red-900 mb-6">Zone de danger</h2>
-
-        <button
-          onClick={() => {
-            if (
-              confirm(
-                "Êtes-vous sûr de vouloir vous déconnecter ? Vous devrez vous reconnecter pour accéder à votre compte."
-              )
-            ) {
-              logout();
-            }
-          }}
-          className="w-full flex items-center justify-center gap-2 bg-red-600 text-white rounded-lg px-6 py-3 font-semibold hover:bg-red-700 transition"
-        >
-          <LogOut size={20} />
-          Déconnexion
-        </button>
-      </div>
+       
     </div>
   );
 }
