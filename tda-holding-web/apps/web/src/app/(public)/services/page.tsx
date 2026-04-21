@@ -35,19 +35,17 @@ export default function ServicesPage() {
       {/* Service 1 — Véhicules */}
       <section id="vehicules" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="bg-[#1B2E1A] rounded-3xl p-10 space-y-6">
-              <div className="w-14 h-14 bg-[#DAA520]/20 rounded-2xl flex items-center justify-center">
-                <Car size={28} className="text-[#DAA520]" />
-              </div>
-              <h2 className="text-3xl font-black text-white">
+          <div className="grid md:grid-cols-2 gap-0 rounded-3xl overflow-hidden bg-white shadow-lg h-80 md:h-96">
+            {/* Text side */}
+            <div className="p-10 space-y-6 flex flex-col justify-center">
+              <h2 className="text-3xl font-black text-[#1B2E1A]">
                 Location &amp; Vente de Véhicules
               </h2>
-              <p className="text-gray-300 text-sm leading-relaxed">
-                TDA Bénéficiez d&apos;un parc de véhicules diversifié pour tous vos
+              <p className="text-gray-600 text-sm leading-relaxed">
+                Bénéficiez d&apos;un parc de véhicules diversifié pour tous vos
                 besoins de mobilité en Afrique de l&apos;Ouest.
               </p>
-              <ul className="space-y-2 text-sm text-gray-300">
+              <ul className="space-y-2 text-sm text-gray-600">
                 {[
                   "SUV, berlines, pick-ups et utilitaires",
                   "Location à la journée, semaine ou mois",
@@ -56,21 +54,22 @@ export default function ServicesPage() {
                   "Assurance incluse dans la location",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2">
-                    <CheckCircle2 size={15} className="text-[#DAA520] shrink-0" />
+                    <CheckCircle2 size={15} className="text-[#1B5E20] shrink-0" />
                     {item}
                   </li>
                 ))}
               </ul>
               <Link
                 href="/reservations?type=vehicule"
-                className="inline-flex items-center gap-2 bg-[#DAA520] text-white rounded-full px-6 py-3 text-sm font-semibold hover:bg-yellow-600 transition"
+                className="inline-flex items-center gap-2 bg-[#1B5E20] text-white rounded-full px-6 py-3 text-sm font-semibold hover:bg-[#2E7D32] transition w-fit"
               >
                 Voir les véhicules <ArrowRight size={16} />
               </Link>
             </div>
-            <div className="rounded-3xl overflow-hidden h-80 md:h-full min-h-[320px]">
+            {/* Image side */}
+            <div className="overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&q=80"
+                src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80"
                 alt="Flotte de véhicules TDA"
                 className="w-full h-full object-cover"
               />
@@ -80,20 +79,19 @@ export default function ServicesPage() {
       </section>
 
       {/* Service 2 — Immobilier */}
-      <section id="immobilier" className="py-20 bg-gray-50">
+      <section id="immobilier" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="rounded-3xl overflow-hidden h-80 md:h-full min-h-[320px] order-2 md:order-1">
+          <div className="grid md:grid-cols-2 gap-0 rounded-3xl overflow-hidden bg-white shadow-lg h-80 md:h-96">
+            {/* Image side */}
+            <div className="overflow-hidden order-2 md:order-1">
               <img
                 src="https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&q=80"
                 alt="Biens immobiliers TDA"
                 className="w-full h-full object-cover"
               />
             </div>
-            <div className="order-1 md:order-2 space-y-6">
-              <div className="w-14 h-14 bg-[#1B5E20]/10 rounded-2xl flex items-center justify-center">
-                <Building2 size={28} className="text-[#1B5E20]" />
-              </div>
+            {/* Text side */}
+            <div className="p-10 space-y-6 flex flex-col justify-center order-1 md:order-2 bg-gray-50">
               <h2 className="text-3xl font-black text-gray-900">
                 Gestion Immobilière
               </h2>
@@ -117,7 +115,7 @@ export default function ServicesPage() {
               </ul>
               <Link
                 href="/reservations?type=immobilier"
-                className="inline-flex items-center gap-2 bg-[#1B5E20] text-white rounded-full px-6 py-3 text-sm font-semibold hover:bg-[#2E7D32] transition"
+                className="inline-flex items-center gap-2 bg-[#1B5E20] text-white rounded-full px-6 py-3 text-sm font-semibold hover:bg-[#2E7D32] transition w-fit"
               >
                 Voir les biens <ArrowRight size={16} />
               </Link>
@@ -129,19 +127,17 @@ export default function ServicesPage() {
       {/* Service 3 — Chauffeurs */}
       <section id="chauffeurs" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="bg-[#1B2E1A] rounded-3xl p-10 space-y-6">
-              <div className="w-14 h-14 bg-[#DAA520]/20 rounded-2xl flex items-center justify-center">
-                <UserCheck size={28} className="text-[#DAA520]" />
-              </div>
-              <h2 className="text-3xl font-black text-white">
+          <div className="grid md:grid-cols-2 gap-0 rounded-3xl overflow-hidden bg-white shadow-lg h-80 md:h-96">
+            {/* Text side */}
+            <div className="p-8 space-y-4 flex flex-col justify-between">
+              <h2 className="text-3xl font-black text-[#1B2E1A]">
                 Service de Chauffeurs Professionnels
               </h2>
-              <p className="text-gray-300 text-sm leading-relaxed">
+              <p className="text-gray-600 text-sm leading-relaxed">
                 Des chauffeurs professionnels certifiés, formés aux standards
                 internationaux pour vos déplacements en toute sécurité.
               </p>
-              <ul className="space-y-2 text-sm text-gray-300">
+              <ul className="space-y-2 text-sm text-gray-600">
                 {[
                   "Chauffeurs certifiés et expérimentés",
                   "Disponibles 24h/24 et 7j/7",
@@ -150,21 +146,22 @@ export default function ServicesPage() {
                   "Tarifs horaires et journaliers flexibles",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2">
-                    <CheckCircle2 size={15} className="text-[#DAA520] shrink-0" />
+                    <CheckCircle2 size={15} className="text-[#1B5E20] shrink-0" />
                     {item}
                   </li>
                 ))}
               </ul>
               <Link
                 href="/reservations?type=vehicule"
-                className="inline-flex items-center gap-2 bg-[#DAA520] text-white rounded-full px-6 py-3 text-sm font-semibold hover:bg-yellow-600 transition"
+                className="inline-flex items-center gap-2 bg-[#1B5E20] text-white rounded-full px-6 py-3 text-sm font-semibold hover:bg-[#2E7D32] transition w-fit"
               >
                 Réserver avec chauffeur <ArrowRight size={16} />
               </Link>
             </div>
-            <div className="rounded-3xl overflow-hidden h-80 md:h-full min-h-[320px]">
+            {/* Image side */}
+            <div className="overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80"
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
                 alt="Chauffeur professionnel TDA"
                 className="w-full h-full object-cover"
               />

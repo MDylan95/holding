@@ -349,53 +349,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── TESTIMONIALS ─── */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <p className="text-[#DAA520] text-xs font-semibold tracking-widest uppercase mb-2">
-              ★ Témoignages
-            </p>
-            <h2 className="text-4xl font-black text-gray-900">
-              Ils nous font confiance
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6 items-center">
-            {/* Left column */}
-            <div className="flex flex-col gap-6">
-              {TESTIMONIALS.slice(0, 2).map((t) => (
-                <TestimonialCard key={t.name} {...t} />
-              ))}
-            </div>
-
-            {/* Center image */}
-            <div className="hidden md:block relative rounded-3xl overflow-hidden h-[420px]">
-              <img
-                src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80"
-                alt="Clients satisfaits"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1B5E20]/80 to-transparent" />
-              <div className="absolute bottom-8 left-0 right-0 text-center">
-                <div className="text-white font-black text-2xl">
-                  +2 000 clients
-                </div>
-                <div className="text-green-200 text-sm mt-1">
-                  satisfaits à travers l&apos;Afrique de l&apos;Ouest
-                </div>
-              </div>
-            </div>
-
-            {/* Right column */}
-            <div className="flex flex-col gap-6">
-              {TESTIMONIALS.slice(2).map((t) => (
-                <TestimonialCard key={t.name} {...t} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+       
 
       {/* ─── CTA BANNER ─── */}
       <section className="py-0">
@@ -468,38 +422,4 @@ export default function HomePage() {
   );
 }
 
-function TestimonialCard({
-  name,
-  role,
-  img,
-  text,
-  stars,
-}: {
-  name: string;
-  role: string;
-  img: string;
-  text: string;
-  stars: number;
-}) {
-  return (
-    <div className="bg-gray-50 rounded-2xl p-6">
-      <div className="flex items-center gap-3 mb-3">
-        <img
-          src={img}
-          alt={name}
-          className="w-10 h-10 rounded-full object-cover"
-        />
-        <div>
-          <p className="font-semibold text-sm text-gray-900">{name}</p>
-          <p className="text-xs text-gray-500">{role}</p>
-        </div>
-      </div>
-      <div className="flex gap-0.5 mb-3">
-        {Array.from({ length: stars }).map((_, i) => (
-          <Star key={i} size={12} className="fill-[#DAA520] text-[#DAA520]" />
-        ))}
-      </div>
-      <p className="text-sm text-gray-600 leading-relaxed">&ldquo;{text}&rdquo;</p>
-    </div>
-  );
-}
+ 
