@@ -187,3 +187,37 @@ export function usePropertyBySlug(slug: string) {
 
   return { property, loading, error };
 }
+
+export interface Booking {
+  id: number;
+  type: "vehicle" | "property" | "driver";
+  name: string;
+  start_date: string;
+  end_date?: string;
+  status: "pending" | "confirmed" | "cancelled";
+  created_at: string;
+}
+
+export function useUserBookings() {
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const data = await apiFetch<{ data: Booking[] }>("/api/v1/bookings");
+        setBookings(data.data || []);
+      } catch (err) {
+        console.error("Failed to fetch bookings:", err);
+        setError(err instanceof ApiError ? err.message : "Erreur de chargement");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
+  }, []);
+
+  return { bookings, loading, error };
+}
