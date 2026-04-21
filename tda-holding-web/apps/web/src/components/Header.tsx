@@ -9,7 +9,7 @@ import { useAuth } from "@/lib/auth-context";
 const NAV_LINKS = [
   { href: "/", label: "Accueil" },
   { href: "/services", label: "Nos Services" },
-  { href: "/reservations", label: "Réservations" },
+  { href: "/reservations", label: "Catalogue" },
   { href: "/contact", label: "Contact" },
 ];
 
