@@ -161,26 +161,36 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
-            {/* Card Véhicules */}
-            <div className="bg-[#1B2E1A] rounded-2xl p-8 flex flex-col justify-between min-h-[280px]">
-              <div>
-                <div className="w-12 h-12 bg-[#DAA520]/20 rounded-xl flex items-center justify-center mb-5">
-                  <Car size={24} className="text-[#DAA520]" />
+            {/* Card Véhicules — avec image */}
+            <div className="relative rounded-2xl overflow-hidden min-h-[280px] group">
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                style={{
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&q=80')",
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div className="relative z-10 p-8 flex flex-col justify-between h-full min-h-[280px]">
+                <div>
+                  <div className="w-12 h-12 bg-[#DAA520]/20 rounded-xl flex items-center justify-center mb-5">
+                    <Car size={24} className="text-[#DAA520]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-3">
+                    Location &amp; Vente de Véhicules
+                  </h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    SUV, berlines, pick-ups et utilitaires disponibles à la
+                    location ou à la vente. Options avec ou sans chauffeur.
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">
-                  Location &amp; Vente de Véhicules
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  SUV, berlines, pick-ups et utilitaires disponibles à la
-                  location ou à la vente. Options avec ou sans chauffeur.
-                </p>
+                <Link
+                  href="/reservations?type=vehicule"
+                  className="inline-flex items-center gap-1 text-[#DAA520] text-sm font-semibold mt-6 hover:gap-2 transition-all"
+                >
+                  Explorer <ArrowRight size={16} />
+                </Link>
               </div>
-              <Link
-                href="/reservations?type=vehicule"
-                className="inline-flex items-center gap-1 text-[#DAA520] text-sm font-semibold mt-6 hover:gap-2 transition-all"
-              >
-                Explorer <ArrowRight size={16} />
-              </Link>
             </div>
 
             {/* Card Immobilier — avec image */}
@@ -215,28 +225,38 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Card Chauffeurs */}
-            <div className="bg-[#1B2E1A] rounded-2xl p-8 flex flex-col justify-between min-h-[280px]">
-              <div>
-                <div className="w-12 h-12 bg-[#DAA520]/20 rounded-xl flex items-center justify-center mb-5">
-                  <UserCheck size={24} className="text-[#DAA520]" />
+            {/* Card Chauffeurs — avec image */}
+            <div className="relative rounded-2xl overflow-hidden min-h-[280px] group">
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                style={{
+                  backgroundImage:
+                    "url('https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80')",
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div className="relative z-10 p-8 flex flex-col justify-between h-full min-h-[280px]">
+                <div>
+                  <div className="w-12 h-12 bg-[#DAA520]/20 rounded-xl flex items-center justify-center mb-5">
+                    <UserCheck size={24} className="text-[#DAA520]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-3">
+                    Chauffeurs
+                    <br />
+                    Professionnels
+                  </h3>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    Des chauffeurs expérimentés, formés et disponibles pour vos
+                    déplacements professionnels et personnels.
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">
-                  Chauffeurs
-                  <br />
-                  Professionnels
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">
-                  Des chauffeurs expérimentés, formés et disponibles pour vos
-                  déplacements professionnels et personnels.
-                </p>
+                <Link
+                  href="/services#chauffeurs"
+                  className="inline-flex items-center gap-1 text-[#DAA520] text-sm font-semibold mt-6 hover:gap-2 transition-all"
+                >
+                  En savoir plus <ArrowRight size={16} />
+                </Link>
               </div>
-              <Link
-                href="/services#chauffeurs"
-                className="inline-flex items-center gap-1 text-[#DAA520] text-sm font-semibold mt-6 hover:gap-2 transition-all"
-              >
-                En savoir plus <ArrowRight size={16} />
-              </Link>
             </div>
           </div>
         </div>
