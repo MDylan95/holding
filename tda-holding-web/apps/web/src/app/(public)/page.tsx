@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Car,
@@ -8,6 +10,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import HeroCarousel from "@/components/HeroCarousel";
+import { useVehicles, useProperties } from "@/lib/hooks";
 
 // --- Stats ---
 const STATS = [
@@ -135,6 +138,12 @@ const TESTIMONIALS = [
 ];
 
 export default function HomePage() {
+  const { vehicles, loading: vehiclesLoading } = useVehicles();
+  const { properties, loading: propertiesLoading } = useProperties();
+
+  // Limiter à 4 véhicules pour l'affichage
+  const featuredVehicles = vehicles.slice(0, 4);
+
   return (
     <>
       {/* ─── HERO CAROUSEL ─── */}
@@ -295,56 +304,67 @@ export default function HomePage() {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {VEHICLES.map((v) => (
-              <div
-                key={v.name}
-                className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
-              >
-                <div className="relative overflow-hidden">
-                  <img
-                    src={v.img}
-                    alt={v.name}
-                    className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3 flex gap-2">
-                    {v.badge && (
-                      <span className="bg-orange-500 text-white text-xs rounded-full px-2.5 py-0.5 font-semibold">
-                        {v.badge}
-                      </span>
-                    )}
-                    <span
-                      className={`${v.tagColor} text-white text-xs rounded-full px-2.5 py-0.5 font-semibold`}
-                    >
-                      {v.tag}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-4">
-                  <h3 className="font-bold text-gray-900 mb-1">{v.name}</h3>
-                  <p className="text-xs text-gray-500 mb-3 flex items-center gap-1">
-                    <span className="text-[#DAA520]">●</span>
-                    {v.city} · {v.type}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="font-black text-gray-900 text-sm">
-                        {v.price}
-                      </span>
-                      {v.unit && (
-                        <span className="text-gray-400 text-xs"> {v.unit}</span>
-                      )}
-                    </div>
-                    <Link
-                      href={v.href}
-                      className="bg-[#1B5E20] text-white text-xs rounded-full px-4 py-1.5 font-semibold hover:bg-[#2E7D32] transition"
-                    >
-                      {v.cta}
-                    </Link>
-                  </div>
-                </div>
+            {vehiclesLoading ? (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500">Chargement des véhicules...</p>
               </div>
-            ))}
+            ) : featuredVehicles.length > 0 ? (
+              featuredVehicles.map((vehicle) => (
+                <div
+                  key={vehicle.id}
+                  className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group"
+                >
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={
+                        vehicle.media?.[0]?.url ||
+                        vehicle.images?.[0]?.url ||
+                        "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=600&q=80"
+                      }
+                      alt={vehicle.name}
+                      className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute top-3 left-3 flex gap-2">
+                      <span className="bg-[#1B5E20] text-white text-xs rounded-full px-2.5 py-0.5 font-semibold">
+                        {vehicle.price_per_day ? "Location" : "Vente"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="p-4">
+                    <h3 className="font-bold text-gray-900 mb-1">
+                      {vehicle.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 mb-3 flex items-center gap-1">
+                      <span className="text-[#DAA520]">●</span>
+                      {vehicle.city} · {vehicle.type}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-black text-gray-900 text-sm">
+                          {vehicle.price_per_day
+                            ? `${vehicle.price_per_day.toLocaleString()} FCFA`
+                            : `${vehicle.price_sale?.toLocaleString()} FCFA`}
+                        </span>
+                        {vehicle.price_per_day && (
+                          <span className="text-gray-400 text-xs"> / jour</span>
+                        )}
+                      </div>
+                      <Link
+                        href={`/vehicules/${vehicle.slug}`}
+                        className="bg-[#1B5E20] text-white text-xs rounded-full px-4 py-1.5 font-semibold hover:bg-[#2E7D32] transition"
+                      >
+                        Voir
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500">Aucun véhicule disponible</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
