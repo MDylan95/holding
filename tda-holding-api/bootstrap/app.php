@@ -23,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
         ]);
 
+        // Sanctum SPA : activer l'authentification stateful (cookies) pour les routes API
+        $middleware->statefulApi();
+
         $middleware->alias([
             'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);

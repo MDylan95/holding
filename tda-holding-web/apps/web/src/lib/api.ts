@@ -28,7 +28,7 @@ export async function apiFetch<T>(
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
-      ...(xsrfToken ? { "X-XSRF-TOKEN": decodeURIComponent(xsrfToken) } : {}),
+      ...(xsrfToken ? { "X-XSRF-TOKEN": xsrfToken } : {}),
       ...(init.headers ?? {}),
     },
   });
@@ -60,7 +60,9 @@ function getCookie(name: string): string | undefined {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) {
-    return parts[1]?.split(";").shift();
+    const token = parts[1]?.split(";").shift();
+    // XSRF-TOKEN is URL-encoded by Sanctum, decode it
+    return token ? decodeURIComponent(token) : undefined;
   }
   return undefined;
 }

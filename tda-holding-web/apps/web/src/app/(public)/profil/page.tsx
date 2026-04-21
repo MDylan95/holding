@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { Eye, EyeOff, Loader } from "lucide-react";
 import { apiFetch, ApiError, initCsrf } from "@/lib/api";
+import { useAuth } from "@/lib/auth-context";
 
 export default function ProfilPage() {
+  const { refetch, isAuthenticated, loading: authLoading } = useAuth();
   const [showPwd, setShowPwd] = useState(false);
   const [mode, setMode] = useState<"login" | "register">("login");
   const [loading, setLoading] = useState(false);
@@ -28,6 +30,13 @@ export default function ProfilPage() {
     });
   }, []);
 
+  // Redirect authenticated users to dashboard
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      window.location.href = "/dashboard";
+    }
+  }, [authLoading, isAuthenticated]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -35,18 +44,28 @@ export default function ProfilPage() {
     setLoading(true);
 
     try {
+      // Ensure CSRF is initialized before login
+      await initCsrf();
+      
       await apiFetch<{ user: unknown; token?: string }>("/api/v1/auth/login", {
         method: "POST",
         body: JSON.stringify({
-          email: loginEmail,
+          login: loginEmail,
           password: loginPassword,
         }),
       });
 
       setSuccess("Connexion réussie ! Redirection...");
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1500);
+      // Wait a bit for cookies to be set, then refetch user
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const success = await refetch();
+      if (success) {
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 500);
+      } else {
+        setError("Erreur lors du chargement du profil. Veuillez réessayer.");
+      }
     } catch (err) {
       console.error("Login error:", err);
       if (err instanceof ApiError) {
@@ -68,10 +87,14 @@ export default function ProfilPage() {
     setLoading(true);
 
     try {
+      // Ensure CSRF is initialized before register
+      await initCsrf();
+      
       await apiFetch<{ user: unknown; token?: string }>("/api/v1/auth/register", {
         method: "POST",
         body: JSON.stringify({
-          name: `${registerFirstName} ${registerLastName}`,
+          first_name: registerFirstName,
+          last_name: registerLastName,
           email: registerEmail,
           password: registerPassword,
           password_confirmation: registerPassword,
@@ -79,9 +102,16 @@ export default function ProfilPage() {
       });
 
       setSuccess("Inscription réussie ! Connexion en cours...");
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 1500);
+      // Wait a bit for cookies to be set, then refetch user
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const success = await refetch();
+      if (success) {
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 500);
+      } else {
+        setError("Erreur lors du chargement du profil. Veuillez réessayer.");
+      }
     } catch (err) {
       console.error("Register error:", err);
       if (err instanceof ApiError) {

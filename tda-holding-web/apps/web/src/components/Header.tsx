@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard } from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
 
 const NAV_LINKS = [
   { href: "/", label: "Accueil" },
   { href: "/services", label: "Nos Services" },
   { href: "/reservations", label: "Réservations" },
-  { href: "/profil", label: "Profil" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -17,6 +17,7 @@ export default function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,16 +67,32 @@ export default function Header() {
 
         {/* CTAs */}
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/profil"
-            className={`text-sm rounded-full px-4 py-1.5 transition font-semibold ${
-              scrolled
-                ? "text-gray-600 border border-gray-300 hover:bg-gray-50"
-                : "text-white border border-white/40 hover:bg-white/10"
-            }`}
-          >
-            Connexion
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              href="/dashboard"
+              className={`flex items-center gap-2 text-sm rounded-full px-4 py-1.5 transition font-semibold ${
+                scrolled
+                  ? "text-gray-900 bg-gray-100 hover:bg-gray-200"
+                  : "text-white bg-white/20 hover:bg-white/30"
+              }`}
+            >
+              <div className="w-6 h-6 bg-[#DAA520] rounded-full flex items-center justify-center text-white text-xs font-black">
+                {user?.first_name?.[0]}
+              </div>
+              Mon espace
+            </Link>
+          ) : (
+            <Link
+              href="/profil"
+              className={`text-sm rounded-full px-4 py-1.5 transition font-semibold ${
+                scrolled
+                  ? "text-gray-600 border border-gray-300 hover:bg-gray-50"
+                  : "text-white border border-white/40 hover:bg-white/10"
+              }`}
+            >
+              Connexion
+            </Link>
+          )}
           <Link
             href="/reservations"
             className="text-sm bg-[#1B5E20] text-white rounded-full px-5 py-1.5 hover:bg-[#2E7D32] transition font-semibold"
@@ -122,17 +139,28 @@ export default function Header() {
             </Link>
           ))}
           <div className="flex gap-3 pt-2">
-            <Link
-              href="/profil"
-              onClick={() => setOpen(false)}
-              className={`flex-1 text-sm text-center rounded-full py-2 transition ${
-                scrolled
-                  ? "text-gray-600 border border-gray-300 hover:bg-gray-50"
-                  : "text-white border border-white/40 hover:bg-white/10"
-              }`}
-            >
-              Connexion
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="flex-1 flex items-center justify-center gap-2 text-sm text-center bg-[#DAA520] text-white rounded-full py-2 font-semibold hover:bg-yellow-600 transition"
+              >
+                <LayoutDashboard size={16} />
+                Mon espace
+              </Link>
+            ) : (
+              <Link
+                href="/profil"
+                onClick={() => setOpen(false)}
+                className={`flex-1 text-sm text-center rounded-full py-2 transition ${
+                  scrolled
+                    ? "text-gray-600 border border-gray-300 hover:bg-gray-50"
+                    : "text-white border border-white/40 hover:bg-white/10"
+                }`}
+              >
+                Connexion
+              </Link>
+            )}
             <Link
               href="/reservations"
               onClick={() => setOpen(false)}

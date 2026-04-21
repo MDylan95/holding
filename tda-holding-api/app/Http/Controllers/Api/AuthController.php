@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -37,6 +38,11 @@ class AuthController extends Controller
 
         $user = User::create($validated);
 
+        // SPA : connecter l'utilisateur via la session (cookie-based)
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        // Mobile/API clients : token Sanctum
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -71,6 +77,11 @@ class AuthController extends Controller
             ], 403);
         }
 
+        // SPA : connecter l'utilisateur via la session (cookie-based)
+        Auth::login($user);
+        $request->session()->regenerate();
+
+        // Mobile/API clients : token Sanctum
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
@@ -82,7 +93,20 @@ class AuthController extends Controller
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = $request->user();
+
+        // Si authentifié via token (mobile), supprimer le token courant
+        $token = $user->currentAccessToken();
+        if ($token && method_exists($token, 'delete')) {
+            $token->delete();
+        }
+
+        // SPA : invalider la session
+        if ($request->hasSession()) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
 
         return response()->json([
             'message' => 'Déconnexion réussie.',
