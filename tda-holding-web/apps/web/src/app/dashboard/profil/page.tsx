@@ -2,7 +2,8 @@
 
 import { useAuth } from "@/lib/auth-context";
 import { useState } from "react";
-import { User, Mail, Phone, MapPin, Save } from "lucide-react";
+import { User, Mail, Phone, MapPin, Save, AlertCircle } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 
 export default function ProfilPage() {
   const { user } = useAuth();
@@ -15,6 +16,10 @@ export default function ProfilPage() {
     country: "",
   });
   const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,8 +29,25 @@ export default function ProfilPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    // TODO: Implémenter l'appel API pour mettre à jour le profil
-    setTimeout(() => setSaving(false), 1000);
+    setMessage(null);
+
+    try {
+      await apiFetch("/api/v1/auth/profile", {
+        method: "PUT",
+        body: JSON.stringify(formData),
+      });
+      setMessage({
+        type: "success",
+        text: "Profil mis à jour avec succès",
+      });
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: "Erreur lors de la mise à jour du profil",
+      });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -54,6 +76,31 @@ export default function ProfilPage() {
           </div>
         </div>
       </div>
+
+      {/* Messages */}
+      {message && (
+        <div
+          className={`rounded-2xl p-4 flex items-center gap-3 ${
+            message.type === "success"
+              ? "bg-green-50 border border-green-200"
+              : "bg-red-50 border border-red-200"
+          }`}
+        >
+          <AlertCircle
+            size={20}
+            className={
+              message.type === "success" ? "text-green-600" : "text-red-600"
+            }
+          />
+          <p
+            className={
+              message.type === "success" ? "text-green-800" : "text-red-800"
+            }
+          >
+            {message.text}
+          </p>
+        </div>
+      )}
 
       {/* Edit Form */}
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-8 shadow-sm space-y-6">

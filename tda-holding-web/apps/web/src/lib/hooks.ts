@@ -221,3 +221,50 @@ export function useUserBookings() {
 
   return { bookings, loading, error };
 }
+
+export interface Favorite {
+  id: number;
+  type: "vehicle" | "property";
+  vehicle_id?: number;
+  property_id?: number;
+  vehicle?: Vehicle;
+  property?: Property;
+}
+
+export function useFavorites() {
+  const [favorites, setFavorites] = useState<Favorite[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+        const data = await apiFetch<{ data: Favorite[] }>("/api/v1/favorites");
+        setFavorites(data.data || []);
+      } catch (err) {
+        console.error("Failed to fetch favorites:", err);
+        setError(err instanceof ApiError ? err.message : "Erreur de chargement");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFavorites();
+  }, []);
+
+  const toggleFavorite = async (type: "vehicle" | "property", id: number) => {
+    try {
+      await apiFetch("/api/v1/favorites/toggle", {
+        method: "POST",
+        body: JSON.stringify({ type, id }),
+      });
+      // Refetch favorites after toggle
+      const data = await apiFetch<{ data: Favorite[] }>("/api/v1/favorites");
+      setFavorites(data.data || []);
+    } catch (err) {
+      console.error("Failed to toggle favorite:", err);
+    }
+  };
+
+  return { favorites, loading, error, toggleFavorite };
+}
