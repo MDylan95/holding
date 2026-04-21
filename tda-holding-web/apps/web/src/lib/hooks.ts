@@ -135,3 +135,55 @@ export function useCategories() {
 
   return { categories, loading, error };
 }
+
+export function useVehicleBySlug(slug: string) {
+  const [vehicle, setVehicle] = useState<Vehicle | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchVehicle = async () => {
+      try {
+        const data = await apiFetch<Vehicle>(`/api/v1/vehicles/${slug}`);
+        setVehicle(data);
+      } catch (err) {
+        console.error("Failed to fetch vehicle:", err);
+        setError(err instanceof ApiError ? err.message : "Erreur de chargement");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVehicle();
+  }, [slug]);
+
+  return { vehicle, loading, error };
+}
+
+export function usePropertyBySlug(slug: string) {
+  const [property, setProperty] = useState<Property | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!slug) return;
+
+    const fetchProperty = async () => {
+      try {
+        const data = await apiFetch<Property>(`/api/v1/properties/${slug}`);
+        setProperty(data);
+      } catch (err) {
+        console.error("Failed to fetch property:", err);
+        setError(err instanceof ApiError ? err.message : "Erreur de chargement");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperty();
+  }, [slug]);
+
+  return { property, loading, error };
+}
