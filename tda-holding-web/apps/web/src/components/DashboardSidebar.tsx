@@ -11,6 +11,8 @@ import {
   Menu,
   X,
   Globe,
+  Bell,
+  Settings,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth-context";
@@ -34,6 +36,8 @@ export function DashboardSidebar() {
     },
     { href: "/dashboard/favoris", label: "Mes favoris", icon: Heart },
     { href: "/dashboard/profil", label: "Mon profil", icon: User },
+    { href: "/dashboard/notifications", label: "Notifications", icon: Bell },
+    { href: "/dashboard/parametres", label: "Paramètres", icon: Settings },
   ];
 
   const isActive = (href: string, exact = false) => {
