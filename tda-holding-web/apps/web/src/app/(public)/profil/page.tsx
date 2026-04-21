@@ -1,16 +1,100 @@
 "use client";
 
-import type { Metadata } from "next";
-import Link from "next/link";
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-
-// Note: metadata export is ignored in "use client" components.
-// See profil/metadata.ts for static metadata.
+import { useState, useEffect } from "react";
+import { Eye, EyeOff, Loader } from "lucide-react";
+import { apiFetch, ApiError, initCsrf } from "@/lib/api";
 
 export default function ProfilPage() {
   const [showPwd, setShowPwd] = useState(false);
   const [mode, setMode] = useState<"login" | "register">("login");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  // Login form state
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  // Register form state
+  const [registerFirstName, setRegisterFirstName] = useState("");
+  const [registerLastName, setRegisterLastName] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
+  const [registerPassword, setRegisterPassword] = useState("");
+
+  // Initialize CSRF on mount
+  useEffect(() => {
+    initCsrf().catch((err) => {
+      console.error("CSRF init failed:", err);
+    });
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      await apiFetch<{ user: unknown; token?: string }>("/api/v1/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: loginEmail,
+          password: loginPassword,
+        }),
+      });
+
+      setSuccess("Connexion réussie ! Redirection...");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
+    } catch (err) {
+      console.error("Login error:", err);
+      if (err instanceof ApiError) {
+        setError(err.message || "Identifiants invalides");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Erreur de connexion. Vérifiez votre connexion internet.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
+
+    try {
+      await apiFetch<{ user: unknown; token?: string }>("/api/v1/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          name: `${registerFirstName} ${registerLastName}`,
+          email: registerEmail,
+          password: registerPassword,
+          password_confirmation: registerPassword,
+        }),
+      });
+
+      setSuccess("Inscription réussie ! Connexion en cours...");
+      setTimeout(() => {
+        window.location.href = "/";
+      }, 1500);
+    } catch (err) {
+      console.error("Register error:", err);
+      if (err instanceof ApiError) {
+        setError(err.message || "Erreur lors de l'inscription");
+      } else if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Erreur d'inscription. Vérifiez votre connexion internet.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-16 px-4 pt-32">
@@ -31,15 +115,29 @@ export default function ProfilPage() {
               Accédez à votre espace personnel
             </p>
 
-            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+                {success}
+              </div>
+            )}
+
+            <form className="space-y-5" onSubmit={handleLogin}>
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                  Email ou Téléphone
+                  Email
                 </label>
                 <input
-                  type="text"
-                  placeholder="email@exemple.com ou +225..."
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition"
+                  type="email"
+                  placeholder="email@exemple.com"
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  disabled={loading}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition disabled:bg-gray-100"
                 />
               </div>
 
@@ -51,12 +149,16 @@ export default function ProfilPage() {
                   <input
                     type={showPwd ? "text" : "password"}
                     placeholder="••••••••"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition pr-11"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    disabled={loading}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition pr-11 disabled:bg-gray-100"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPwd(!showPwd)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    disabled={loading}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50"
                   >
                     {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
@@ -65,9 +167,17 @@ export default function ProfilPage() {
 
               <button
                 type="submit"
-                className="w-full bg-[#1B5E20] text-white rounded-xl py-3.5 font-semibold text-sm hover:bg-[#2E7D32] transition"
+                disabled={loading}
+                className="w-full bg-[#1B5E20] text-white rounded-xl py-3.5 font-semibold text-sm hover:bg-[#2E7D32] transition disabled:opacity-70 flex items-center justify-center gap-2"
               >
-                Se connecter
+                {loading ? (
+                  <>
+                    <Loader size={16} className="animate-spin" />
+                    Connexion en cours...
+                  </>
+                ) : (
+                  "Se connecter"
+                )}
               </button>
             </form>
 
@@ -90,7 +200,18 @@ export default function ProfilPage() {
               Rejoignez TDA Platform
             </p>
 
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+                {success}
+              </div>
+            )}
+
+            <form className="space-y-4" onSubmit={handleRegister}>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">
@@ -99,7 +220,10 @@ export default function ProfilPage() {
                   <input
                     type="text"
                     placeholder="Jean"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition"
+                    value={registerFirstName}
+                    onChange={(e) => setRegisterFirstName(e.target.value)}
+                    disabled={loading}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition disabled:bg-gray-100"
                   />
                 </div>
                 <div>
@@ -109,7 +233,10 @@ export default function ProfilPage() {
                   <input
                     type="text"
                     placeholder="Dupont"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition"
+                    value={registerLastName}
+                    onChange={(e) => setRegisterLastName(e.target.value)}
+                    disabled={loading}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition disabled:bg-gray-100"
                   />
                 </div>
               </div>
@@ -120,7 +247,10 @@ export default function ProfilPage() {
                 <input
                   type="email"
                   placeholder="email@exemple.com"
-                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition"
+                  value={registerEmail}
+                  onChange={(e) => setRegisterEmail(e.target.value)}
+                  disabled={loading}
+                  className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition disabled:bg-gray-100"
                 />
               </div>
               <div>
@@ -131,12 +261,16 @@ export default function ProfilPage() {
                   <input
                     type={showPwd ? "text" : "password"}
                     placeholder="••••••••"
-                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition pr-11"
+                    value={registerPassword}
+                    onChange={(e) => setRegisterPassword(e.target.value)}
+                    disabled={loading}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1B5E20] transition pr-11 disabled:bg-gray-100"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPwd(!showPwd)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    disabled={loading}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 disabled:opacity-50"
                   >
                     {showPwd ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
@@ -144,9 +278,17 @@ export default function ProfilPage() {
               </div>
               <button
                 type="submit"
-                className="w-full bg-[#1B5E20] text-white rounded-xl py-3.5 font-semibold text-sm hover:bg-[#2E7D32] transition"
+                disabled={loading}
+                className="w-full bg-[#1B5E20] text-white rounded-xl py-3.5 font-semibold text-sm hover:bg-[#2E7D32] transition disabled:opacity-70 flex items-center justify-center gap-2"
               >
-                Créer mon compte
+                {loading ? (
+                  <>
+                    <Loader size={16} className="animate-spin" />
+                    Inscription en cours...
+                  </>
+                ) : (
+                  "Créer mon compte"
+                )}
               </button>
             </form>
 
